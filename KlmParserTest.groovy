@@ -66,7 +66,7 @@ class KlmParserTest extends GroovyTestCase{
     assert coordinates.size() == 1
     assert coordinates[0].x == 1
     assert coordinates[0].y == 2
-  }  
+  }
 
   void testParseCoordinatesWithManyLines(){
     def klmParser = new KlmParser()
@@ -75,7 +75,7 @@ class KlmParserTest extends GroovyTestCase{
     assert coordinates[0].matches(1,2)
     assert coordinates[1].matches(4,5)
     assert coordinates[2].matches(7,8)
-  }  
+  }
 
   void testReadLineWithName(){
    String xml = """
@@ -84,21 +84,106 @@ class KlmParserTest extends GroovyTestCase{
         <Folder>
           <name>Líneas del metro </name>
           <Placemark>
-            <name>lo que sea</name>
+           <name>Línea 7</name>
+           <styleUrl>#line-F8971B-10300-nodesc</styleUrl>
             <LineString>
+             <tessellate>1</tessellate>
               <coordinates>
-              1,2,3
-              </coordinates>
-            </LineString>
-          </Placemark>
+              -99.189586,19.3607037,0
+              -99.1878051,19.3761645,0
+              -99.1863245,19.3847724,0
+              -99.1860509,19.3912798,0
+              -99.187097,19.4031605,0
+              -99.1912866,19.4119136,0
+              -99.1919732,19.4255433,0
+              -99.1910237,19.4335161,0
+              -99.1914367675781,19.4468455104825,0
+              -99.1870825,19.4586984,0
+              -99.1905999,19.4700922,0
+              -99.1905784606934,19.4806724417591,0
+              -99.1948807000001,19.4905036,0
+              -99.2000628,19.5046121,0
+            </coordinates>
+          </LineString>
+        </Placemark>
         </Folder>
       </Document>
     </kml>
     """
-    def klmParser = new KlmParser() 
+    def klmParser = new KlmParser()
     klmParser.parse(xml)
-    assert klmParser.lines[0].name == "lo que sea"
-    assert klmParser.lines[0].coordinates.size() == 1 
+    def firstLine = klmParser.lines[0]
+    def coords = firstLine.coordinates
+    assert firstLine.name == "Línea 7"
+    assert coords.size() == 14
+    assert coords[0].matches(-99.189586,19.3607037)
+    assert coords[7].matches(-99.1910237,19.4335161)
+    assert coords[13].matches(-99.2000628,19.5046121)
+
+  }
+
+  void testReadManyLines(){
+   String xml = """
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+      <Document>
+        <Folder>
+          <name>Líneas del metro </name>
+          <Placemark>
+           <name>Línea 7</name>
+           <styleUrl>#line-F8971B-10300-nodesc</styleUrl>
+            <LineString>
+             <tessellate>1</tessellate>
+              <coordinates>
+              -99.189586,19.3607037,0
+              -99.1878051,19.3761645,0
+              -99.1863245,19.3847724,0
+              -99.1860509,19.3912798,0
+              -99.187097,19.4031605,0
+              -99.1912866,19.4119136,0
+              -99.1919732,19.4255433,0
+              -99.1910237,19.4335161,0
+              -99.1914367675781,19.4468455104825,0
+              -99.1870825,19.4586984,0
+              -99.1905999,19.4700922,0
+              -99.1905784606934,19.4806724417591,0
+              -99.1948807000001,19.4905036,0
+              -99.2000628,19.5046121,0
+            </coordinates>
+          </LineString>
+        </Placemark>
+        <Placemark>
+           <name>Línea 8</name>
+           <styleUrl>#line-F8971B-10300-nodesc</styleUrl>
+            <LineString>
+             <tessellate>1</tessellate>
+              <coordinates>
+              -99.189586,19.3607037,0
+              -99.1878051,19.3761645,0
+              -99.1863245,19.3847724,0
+              -99.1860509,19.3912798,0
+              -99.187097,19.4031605,0
+              -99.1912866,19.4119136,0
+              -99.1919732,19.4255433,0
+              -99.1910237,19.4335161,0
+              -99.1914367675781,19.4468455104825,0
+              -99.1870825,19.4586984,0
+              -99.1905999,19.4700922,0
+              -99.1905784606934,19.4806724417591,0
+              -99.1948807000001,19.4905036,0
+              -99.2000628,19.5046121,0
+            </coordinates>
+          </LineString>
+        </Placemark>
+        </Folder>
+      </Document>
+    </kml>
+    """
+    def klmParser = new KlmParser()
+    klmParser.parse(xml)
+    assert klmParser.lines[0].name == "Línea 7"
+    assert klmParser.lines[0].coordinates.size() == 14
+    assert klmParser.lines[1].name == "Línea 8"
+    assert klmParser.lines[1].coordinates.size() == 14
   }
 
 }
