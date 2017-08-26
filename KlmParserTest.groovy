@@ -38,10 +38,9 @@ class KlmParserTest extends GroovyTestCase{
   void testParseCoordinatesHappyPath(){
 
     def klmParser = new KlmParser()
-    //def coordinates = klmParser.parseCoordinates("1 2 3")
-    //assert coordinates.size() == 1
-    //assert coordinates[0].x == 1
-    //assert coordinates[0].y == 1
-    assert 1 == 1
+    def coordinates = klmParser.parseCoordinates("1,2,3")
+    assert coordinates.size() == 1
+    assert coordinates[0].x == 1
+    assert coordinates[0].y == 2
   }
 }
