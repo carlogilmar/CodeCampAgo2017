@@ -9,6 +9,8 @@ class KlmParser{
 
   def parse(String xml){
     this.xml = xml
+    def datos = new XmlSlurper().parseText(xml)
+    lines.add(datos.Document.Folder.Placemark)
   }
 
   def parseCoordinates(String cadena){
