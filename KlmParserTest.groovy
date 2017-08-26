@@ -60,7 +60,9 @@ class KlmParserTest extends GroovyTestCase{
 
   void testParseCoordinatesWithEmptyLine(){
     def klmParser = new KlmParser()
-    def coordinates = klmParser.parseCoordinates("\n1,2,3")
+    def coordinates = klmParser.parseCoordinates("""
+              1,2,3
+              """)
     assert coordinates.size() == 1
     assert coordinates[0].x == 1
     assert coordinates[0].y == 2
@@ -75,5 +77,28 @@ class KlmParserTest extends GroovyTestCase{
     assert coordinates[2].matches(7,8)
   }  
 
+  void testReadLineWithName(){
+   String xml = """
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+      <Document>
+        <Folder>
+          <name>Líneas del metro </name>
+          <Placemark>
+            <name>lo que sea</name>
+            <LineString>
+              <coordinates>
+              1,2,3
+              </coordinates>
+            </LineString>
+          </Placemark>
+        </Folder>
+      </Document>
+    </kml>
+    """
+    def klmParser = new KlmParser() 
+    klmParser.parse(xml)
+    assert klmParser.lines[0].name == "lo que sea"
+    assert klmParser.lines[0].coordinates.size() == 1 
+  }
 
 }

@@ -10,16 +10,18 @@ class KlmParser{
   def parse(String xml){
     this.xml = xml
     def datos = new XmlSlurper().parseText(xml)
-    lines.add(datos.Document.Folder.Placemark)
+    def placemark = datos.Document.Folder.Placemark
+    def coords = placemark.LineString.coordinates.toString()
+    def line = new Line(name: placemark.name, coordinates: parseCoordinates(coords))
+    lines.add(line)
   }
 
   def parseCoordinates(String cadena){
     ArrayList<Coord> coordinatesAssociate = []
       cadena.eachLine{ line ->
-        if(line){
+        if(line.trim()){
           coordinatesAssociate.add(parseSingleCoordinate(line))  
-        }
-        
+        } 
       }
       coordinatesAssociate   
   }
@@ -31,6 +33,10 @@ class KlmParser{
 
 }
 
+class Line{
+  String name
+  ArrayList<Coord> coordinates
+}
 
 class Coord {
   def x
