@@ -8,7 +8,6 @@ class KlmParser{
 
   def parse(String xml){
     this.xml = xml
-    def mapa = new XlmSlurper().parseText(this.xml)
   }
 
 }
