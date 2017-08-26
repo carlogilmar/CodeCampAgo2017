@@ -17,7 +17,7 @@ class KlmParserTest extends GroovyTestCase{
 
 
   void testReadDocumentWithOneLine(){
-    String xml = """
+    String xml = """<?xml version="1.0" encoding="UTF-8"?>
     <kml xmlns="http://www.opengis.net/kml/2.2">
       <Document>
         <Folder>
@@ -185,5 +185,39 @@ class KlmParserTest extends GroovyTestCase{
     assert klmParser.lines[1].name == "Línea 8"
     assert klmParser.lines[1].coordinates.size() == 14
   }
+
+  void testReadAllLines(){
+   String xml = leerXML("/Users/carlogilmar/Desktop/codeCamp/lineas.xml")
+    def klmParser = new KlmParser()
+    klmParser.parse(xml)
+    assert klmParser.lines[0].name == "Línea 1"
+    assert klmParser.lines[0].coordinates.size() == 20
+    assert klmParser.lines[7].name == "Línea 8"
+    assert klmParser.lines[7].coordinates.size() == 19
+  }
+
+  void testReadOneStation(){
+   String xml = leerXML("/Users/carlogilmar/Desktop/codeCamp/lineas.xml")
+    def klmParser = new KlmParser()
+    klmParser.parse(xml)
+    assert klmParser.stations.size() > 0
+    assert klmParser.stations[0].name == "Acatitla"
+    assert klmParser.stations[3].coordinate.y == 19.4356521 
+  }
+
+  void testBindStationsAndLines(){
+   String xml = leerXML("/Users/carlogilmar/Desktop/codeCamp/lineas.xml")
+    def klmParser = new KlmParser()
+    klmParser.parse(xml)
+    assert klmParser.stations[0].lines.size() > 0
+  }
+
+
+
+  def leerXML(String name){
+    def file = new File(name)
+    file.text
+  }
+
 
 }
