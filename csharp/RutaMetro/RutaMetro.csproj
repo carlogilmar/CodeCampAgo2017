@@ -43,7 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Coord.cs" />
+    <Compile Include="Models\Estacion.cs" />
     <Compile Include="KlmModel.cs" />
+    <Compile Include="Models\Linea.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
