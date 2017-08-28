@@ -36,7 +36,9 @@
             var parser = Parser.Parse(KlmPath);
 
             Assert.That(parser, Is.Not.Null);
-            Assert.That(parser.Lineas, Is.Not.Null.And.Not.Empty);
+            Assert.That(parser.Lineas.Count, Is.EqualTo(12));
+            Assert.That(parser.Lineas.First().Name, Is.EqualTo("Línea 1"));
+            Assert.That(parser.Lineas.Last().Name, Is.EqualTo("Línea 12"));
         }
     }
 
