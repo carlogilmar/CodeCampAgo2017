@@ -67,7 +67,7 @@
             var parser = Parser.Parse(KlmPath);
 
             Assert.That(parser, Is.Not.Null);
-            Assert.That(parser.Estaciones, Is.Not.Null);
+            Assert.That(parser.Estaciones.Count, Is.EqualTo(162));
         }
 
         private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
@@ -118,11 +118,12 @@
         {
             var model = ReadModelFrom(filePath);
             var lineas = model.Document.Folders[0].Placemarks;
+            var estaciones = model.Document.Folders[1].Placemarks;
 
             return new Parser
             {
                 Lineas = lineas.Select(p => ToLinea(p)).ToList(),
-                Estaciones = new Estacion[0]
+                Estaciones = new Estacion[estaciones.Count]
             };
         }
 
