@@ -16,7 +16,7 @@
         private const string KlmPath = @"..\..\..\..\Metro_CDMX.kml.xml";
 
         [Test]
-        public void ReadModelFrom()
+        public void ReadsModelFromFile()
         {
             var model = Parser.ReadModelFrom(KlmPath);
 
@@ -33,7 +33,7 @@
         }
 
         [Test]
-        public void ParseLines()
+        public void ParsesLines()
         {
             var parser = Parser.Parse(KlmPath);
 
@@ -44,7 +44,7 @@
         }
 
         [Test]
-        public void ParseLineCoordinates()
+        public void ParsesLineCoordinates()
         {
             var parser = Parser.Parse(KlmPath);
 
@@ -59,6 +59,15 @@
             Assert.That(linea12.Coords.Count, Is.EqualTo(20));
             Assert.That(linea12.Coords.First(), PointsAt(-99.1878051m, 19.3761645m));
             Assert.That(linea12.Coords.Last(), PointsAt(-99.0174150466919m, 19.2906891806738m));
+        }
+
+        [Test]
+        public void ParsesStations()
+        {
+            var parser = Parser.Parse(KlmPath);
+
+            Assert.That(parser, Is.Not.Null);
+            Assert.That(parser.Estaciones, Is.Not.Null);
         }
 
         private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
@@ -96,10 +105,14 @@
         }
     }
 
+    public class Estacion
+    {
+    }
 
     public class Parser
     {
         public IList<Linea> Lineas { get; private set; }
+        public IList<Estacion> Estaciones { get; private set; }
 
         public static Parser Parse(string filePath)
         {
@@ -108,7 +121,8 @@
 
             return new Parser
             {
-                Lineas = lineas.Select(p => ToLinea(p)).ToList()
+                Lineas = lineas.Select(p => ToLinea(p)).ToList(),
+                Estaciones = new Estacion[0]
             };
         }
 
