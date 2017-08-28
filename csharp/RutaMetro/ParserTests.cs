@@ -39,8 +39,8 @@
 
             Assert.That(parser, Is.Not.Null);
             Assert.That(parser.Lineas.Count, Is.EqualTo(12));
-            Assert.That(parser.Lineas.First().Name, Is.EqualTo("Línea 1"));
-            Assert.That(parser.Lineas.Last().Name, Is.EqualTo("Línea 12"));
+            Assert.That(parser.Lineas.First().Nombre, Is.EqualTo("Línea 1"));
+            Assert.That(parser.Lineas.Last().Nombre, Is.EqualTo("Línea 12"));
         }
 
         [Test]
@@ -68,6 +68,14 @@
 
             Assert.That(parser, Is.Not.Null);
             Assert.That(parser.Estaciones.Count, Is.EqualTo(162));
+
+            var acatitla = parser.Estaciones.First();
+            Assert.That(acatitla.Nombre, Is.EqualTo("Acatitla"));
+            Assert.That(acatitla.Descripcion, Is.EqualTo("Línea A. Santa Martha Acatitla, Iztapalapa, Ciudad de México, DF, México"));
+
+            var acatitla2 = parser.Estaciones.Last();
+            Assert.That(acatitla2.Nombre, Is.EqualTo("Zócalo"));
+            Assert.That(acatitla2.Descripcion, Is.EqualTo("Línea 2. Centro, Cuauhtémoc, 06000 Ciudad de México, DF, México"));
         }
 
         private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
@@ -85,7 +93,7 @@
     public class Linea
     {
         public IList<Coord> Coords { get; set; }
-        public string Name { get; set; }
+        public string Nombre { get; set; }
     }
 
     public class Coord
@@ -107,6 +115,8 @@
 
     public class Estacion
     {
+        public string Nombre { get; set; }
+        public string Descripcion { get; set; }
     }
 
     public class Parser
@@ -122,8 +132,17 @@
 
             return new Parser
             {
-                Lineas = lineas.Select(p => ToLinea(p)).ToList(),
-                Estaciones = new Estacion[estaciones.Count]
+                Lineas = lineas.Select(ToLinea).ToList(),
+                Estaciones = estaciones.Select(ToEstacion).ToList()
+            };
+        }
+
+        private static Estacion ToEstacion(Placemark placemark)
+        {
+            return new Estacion
+            {
+                Nombre = placemark.Name,
+                Descripcion = placemark.Description
             };
         }
 
@@ -165,7 +184,7 @@
             var coordinates = placemark.LineString.Coordinates;
             return new Linea
             {
-                Name = placemark.Name,
+                Nombre = placemark.Name,
                 Coords = ToCoords(coordinates)
             };
         }
