@@ -31,7 +31,7 @@
         }
 
         [Test]
-        public void Lines()
+        public void ParseLines()
         {
             var parser = Parser.Parse(KlmPath);
 
@@ -40,11 +40,24 @@
             Assert.That(parser.Lineas.First().Name, Is.EqualTo("Línea 1"));
             Assert.That(parser.Lineas.Last().Name, Is.EqualTo("Línea 12"));
         }
+
+        [Test]
+        public void ParseLineCoordinates()
+        {
+            var parser = Parser.Parse(KlmPath);
+
+            Assert.That(parser.Lineas, Has.All.Property("Coords").Not.Null);
+        }
     }
 
     public class Linea
     {
         public string Name { get; set; }
+        public IList<Coord> Coords { get; set; }
+    }
+
+    public class Coord
+    {
     }
 
     public class Parser
@@ -58,7 +71,16 @@
 
             return new Parser
             {
-                Lineas = lineas.Select(p => new Linea { Name = p.Name }).ToList()
+                Lineas = lineas.Select(p => ToLinea(p)).ToList()
+            };
+        }
+
+        private static Linea ToLinea(Placemark placemark)
+        {
+            return new Linea
+            {
+                Name = placemark.Name,
+                Coords = new Coord[0]
             };
         }
 
