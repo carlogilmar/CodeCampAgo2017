@@ -7,6 +7,7 @@
     using System.Xml.Serialization;
 
     using NUnit.Framework;
+    using NUnit.Framework.Constraints;
 
     [TestFixture]
     public class ParserTests
@@ -48,20 +49,53 @@
             var parser = Parser.Parse(KlmPath);
 
             Assert.That(parser.Lineas, Has.All.Property("Coords").Not.Empty);
+
+            var linea01 = parser.Lineas.First();
+            Assert.That(linea01.Coords.Count, Is.EqualTo(20));
+            Assert.That(linea01.Coords.First(), PointsAt(-99.2005488m, 19.3982501m));
+            Assert.That(linea01.Coords.Last(), PointsAt(-99.0722072m, 19.4153591m));
+
+            var linea12 = parser.Lineas.Last();
+            Assert.That(linea12.Coords.Count, Is.EqualTo(20));
+            Assert.That(linea12.Coords.First(), PointsAt(-99.1878051m, 19.3761645m));
+            Assert.That(linea12.Coords.Last(), PointsAt(-99.0174150466919m, 19.2906891806738m));
+        }
+
+        private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
+        {
+            return Is.EqualTo(new Coord(latitud, longitud)).Using<Coord>(AreEqual);
+        }
+
+        private static int AreEqual(Coord self, Coord other)
+        {
+            return self.Latitud == other.Latitud && self.Longitud == other.Longitud
+                ? 0 : 1;
         }
     }
 
     public class Linea
     {
-        public string Name { get; set; }
         public IList<Coord> Coords { get; set; }
+        public string Name { get; set; }
     }
 
     public class Coord
     {
-        public decimal Longitud { get; set; }
-        public decimal Latitud { get; set; }
+        public Coord(decimal latitud, decimal longitud)
+        {
+            this.Latitud = latitud;
+            this.Longitud = longitud;
+        }
+
+        public decimal Latitud { get; private set; }
+        public decimal Longitud { get; private set; }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name}({Latitud}m, {Longitud}m)";
+        }
     }
+
 
     public class Parser
     {
@@ -78,15 +112,6 @@
             };
         }
 
-        private static Linea ToLinea(Placemark placemark)
-        {
-            return new Linea
-            {
-                Name = placemark.Name,
-                Coords = new Coord[placemark.LineString.Coordinates.Split(new[] { "\r\n" }, StringSplitOptions.None).Length]
-            };
-        }
-
         public static Kml ReadModelFrom(string filePath)
         {
             Kml result = null;
@@ -98,6 +123,36 @@
             }
 
             return result;
+        }
+
+        private static Coord ToCoord(string line)
+        {
+            //Console.WriteLine(line);
+            var parts = line.Split(',')
+                .Select(p => p.Trim())
+                .Select(decimal.Parse)
+                .ToArray();
+
+            return new Coord(latitud: parts[0], longitud: parts[1]);
+        }
+
+        private static IList<Coord> ToCoords(string coordinates)
+        {
+            return coordinates
+                .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(l => !string.IsNullOrWhiteSpace(l))
+                .Select(ToCoord)
+                .ToList();
+        }
+
+        private static Linea ToLinea(Placemark placemark)
+        {
+            var coordinates = placemark.LineString.Coordinates;
+            return new Linea
+            {
+                Name = placemark.Name,
+                Coords = ToCoords(coordinates)
+            };
         }
     }
 }
