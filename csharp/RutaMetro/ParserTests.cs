@@ -1,5 +1,6 @@
 ﻿namespace CodeCamp.RutaMetro
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -46,7 +47,7 @@
         {
             var parser = Parser.Parse(KlmPath);
 
-            Assert.That(parser.Lineas, Has.All.Property("Coords").Not.Null);
+            Assert.That(parser.Lineas, Has.All.Property("Coords").Not.Empty);
         }
     }
 
@@ -58,6 +59,8 @@
 
     public class Coord
     {
+        public decimal Longitud { get; set; }
+        public decimal Latitud { get; set; }
     }
 
     public class Parser
@@ -80,7 +83,7 @@
             return new Linea
             {
                 Name = placemark.Name,
-                Coords = new Coord[0]
+                Coords = new Coord[placemark.LineString.Coordinates.Split(new[] { "\r\n" }, StringSplitOptions.None).Length]
             };
         }
 
