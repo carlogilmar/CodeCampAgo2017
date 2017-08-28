@@ -44,21 +44,21 @@
         }
 
         [Test]
-        public void ParsesLineCoordinates()
+        public void ParsesLineVertexes()
         {
             var parser = Parser.Parse(KlmPath);
 
-            Assert.That(parser.Lineas, Has.All.Property("Coords").Not.Empty);
+            Assert.That(parser.Lineas, Has.All.Property("Vertices").Not.Empty);
 
             var linea01 = parser.Lineas.First();
-            Assert.That(linea01.Coords.Count, Is.EqualTo(20));
-            Assert.That(linea01.Coords.First(), PointsAt(-99.2005488m, 19.3982501m));
-            Assert.That(linea01.Coords.Last(), PointsAt(-99.0722072m, 19.4153591m));
+            Assert.That(linea01.Vertices.Count, Is.EqualTo(20));
+            Assert.That(linea01.Vertices.First(), PointsAt(-99.2005488m, 19.3982501m));
+            Assert.That(linea01.Vertices.Last(), PointsAt(-99.0722072m, 19.4153591m));
 
             var linea12 = parser.Lineas.Last();
-            Assert.That(linea12.Coords.Count, Is.EqualTo(20));
-            Assert.That(linea12.Coords.First(), PointsAt(-99.1878051m, 19.3761645m));
-            Assert.That(linea12.Coords.Last(), PointsAt(-99.0174150466919m, 19.2906891806738m));
+            Assert.That(linea12.Vertices.Count, Is.EqualTo(20));
+            Assert.That(linea12.Vertices.First(), PointsAt(-99.1878051m, 19.3761645m));
+            Assert.That(linea12.Vertices.Last(), PointsAt(-99.0174150466919m, 19.2906891806738m));
         }
 
         [Test]
@@ -73,9 +73,19 @@
             Assert.That(acatitla.Nombre, Is.EqualTo("Acatitla"));
             Assert.That(acatitla.Descripcion, Is.EqualTo("Línea A. Santa Martha Acatitla, Iztapalapa, Ciudad de México, DF, México"));
 
-            var acatitla2 = parser.Estaciones.Last();
-            Assert.That(acatitla2.Nombre, Is.EqualTo("Zócalo"));
-            Assert.That(acatitla2.Descripcion, Is.EqualTo("Línea 2. Centro, Cuauhtémoc, 06000 Ciudad de México, DF, México"));
+            var zocalo = parser.Estaciones.Last();
+            Assert.That(zocalo.Nombre, Is.EqualTo("Zócalo"));
+            Assert.That(zocalo.Descripcion, Is.EqualTo("Línea 2. Centro, Cuauhtémoc, 06000 Ciudad de México, DF, México"));
+        }
+
+        [Test]
+        public void ParsesStationCoordinates()
+        {
+            var parser = Parser.Parse(KlmPath);
+
+            Assert.That(parser.Estaciones, Has.All.Property("Coord").Not.Null);
+            Assert.That(parser.Estaciones.First().Coord, PointsAt(-99.0056777m, 19.3647171m));
+            Assert.That(parser.Estaciones.Last().Coord, PointsAt(-99.1329861m, 19.4332227m));
         }
 
         private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
@@ -92,7 +102,7 @@
 
     public class Linea
     {
-        public IList<Coord> Coords { get; set; }
+        public IList<Coord> Vertices { get; set; }
         public string Nombre { get; set; }
     }
 
@@ -117,6 +127,7 @@
     {
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
+        public Coord Coord { get; set; }
     }
 
     public class Parser
@@ -142,7 +153,8 @@
             return new Estacion
             {
                 Nombre = placemark.Name,
-                Descripcion = placemark.Description
+                Descripcion = placemark.Description,
+                Coord = ToCoords(placemark.Point.Coordinates).First()
             };
         }
 
@@ -185,7 +197,7 @@
             return new Linea
             {
                 Nombre = placemark.Name,
-                Coords = ToCoords(coordinates)
+                Vertices = ToCoords(coordinates)
             };
         }
     }
