@@ -56,13 +56,13 @@
 
             var linea01 = parser.Lineas.First();
             Assert.That(linea01.Vertices.Count, Is.EqualTo(20));
-            Assert.That(linea01.Vertices.First(), PointsAt(-99.2005488m, 19.3982501m));
-            Assert.That(linea01.Vertices.Last(), PointsAt(-99.0722072m, 19.4153591m));
+            Assert.That(linea01.Vertices.First(), PointsAt(-99.2005488, 19.3982501));
+            Assert.That(linea01.Vertices.Last(), PointsAt(-99.0722072, 19.4153591));
 
             var linea12 = parser.Lineas.Last();
             Assert.That(linea12.Vertices.Count, Is.EqualTo(20));
-            Assert.That(linea12.Vertices.First(), PointsAt(-99.1878051m, 19.3761645m));
-            Assert.That(linea12.Vertices.Last(), PointsAt(-99.0174150466919m, 19.2906891806738m));
+            Assert.That(linea12.Vertices.First(), PointsAt(-99.1878051, 19.3761645));
+            Assert.That(linea12.Vertices.Last(), PointsAt(-99.0174150466919, 19.2906891806738));
         }
 
         [Test]
@@ -88,23 +88,17 @@
             var parser = Parser.Parse(KlmPath);
 
             Assert.That(parser.Estaciones, Has.All.Property("Coord").Not.Null);
-            Assert.That(parser.Estaciones.First().Coord, PointsAt(-99.0056777m, 19.3647171m));
-            Assert.That(parser.Estaciones.Last().Coord, PointsAt(-99.1329861m, 19.4332227m));
+            Assert.That(parser.Estaciones.First().Coord, PointsAt(-99.0056777, 19.3647171));
+            Assert.That(parser.Estaciones.Last().Coord, PointsAt(-99.1329861, 19.4332227));
         }
 
         #endregion
 
         #region Methods
 
-        private static EqualConstraint PointsAt(decimal latitud, decimal longitud)
+        private static EqualConstraint PointsAt(double latitud, double longitud)
         {
-            return Is.EqualTo(new Coord(latitud, longitud)).Using<Coord>(AreEqual);
-        }
-
-        private static int AreEqual(Coord self, Coord other)
-        {
-            return self.Latitud == other.Latitud && self.Longitud == other.Longitud
-                ? 0 : 1;
+            return Is.EqualTo(new Coord(latitud, longitud));
         }
 
         #endregion

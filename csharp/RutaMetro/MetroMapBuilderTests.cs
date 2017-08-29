@@ -35,7 +35,7 @@
             {
                 foreach(var linea in mapa.Lineas)
                 {
-                    if (linea.Vertices.Any(v => estacion.Coord.Equals(v)))
+                    if (linea.Vertices.Any(v => estacion.Coord == v))
                     {
                         linea.Estaciones.Add(estacion);
                         estacion.Lineas.Add(linea);
@@ -138,20 +138,40 @@
                 .WithStations(new[] { estacion })
                 .Build();
 
-            Assert.That(result.Lineas, Is.Not.Empty);
-            Assert.That(result.Lineas.First().Estaciones, Is.Not.Empty);
-            Assert.That(result.Estaciones, Is.Not.Empty);
-            Assert.That(result.Estaciones.First().Lineas, Is.Not.Empty);
+            Assert.That(result.Lineas.First().Estaciones, Is.Not.Empty,
+                "La línea debería tener una estación");
+            Assert.That(result.Estaciones.First().Lineas, Is.Not.Empty,
+                "La estación debería pertenecer a una línea");
         }
 
-        private static Coord Clone(Coord coord)
+        [Test]
+        public void UnaLineaUnaEstacionLigeramenteFueraDelVertice()
         {
-            return new Coord(coord.Latitud, coord.Longitud);
+            var coordEstacion = new Coord(-99.1948807, 19.4905036);
+            var estacion = MakeEstacion(coordEstacion);
+
+            var coordLinea = coordEstacion.Offset(-0.0000000000001);
+            var linea = MakeLinea(coordLinea);
+
+            var result = new MetroMapBuilder()
+                .WithLines(new[] { linea })
+                .WithStations(new[] { estacion })
+                .Build();
+
+            Assert.That(result.Lineas.First().Estaciones, Is.Not.Empty,
+                "La línea debería tener una estación");
+            Assert.That(result.Estaciones.First().Lineas, Is.Not.Empty,
+                "La estación debería pertenecer a una línea");
         }
 
         #endregion
 
         #region Methods
+
+        private static Coord Clone(Coord coord)
+        {
+            return new Coord(coord.Latitud, coord.Longitud);
+        }
 
         private static Estacion MakeEstacion(Coord? coord = null)
         {

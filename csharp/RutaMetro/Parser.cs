@@ -64,7 +64,7 @@
             //Console.WriteLine(line);
             var parts = line.Split(',')
                 .Select(p => p.Trim())
-                .Select(decimal.Parse)
+                .Select(double.Parse)
                 .ToArray();
 
             return new Coord(latitud: parts[0], longitud: parts[1]);
