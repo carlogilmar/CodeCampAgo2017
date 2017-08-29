@@ -52,10 +52,11 @@
     <Compile Include="MetroMapBuilder.cs" />
     <Compile Include="Models\Coord.cs" />
     <Compile Include="Models\Estacion.cs" />
-    <Compile Include="KlmModel.cs" />
+    <Compile Include="Models\KmlModel.cs" />
     <Compile Include="Models\Linea.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\CoordTests.cs" />
     <Compile Include="Tests\MetroMapBuilderTests.cs" />
     <Compile Include="Tests\ParserTests.cs" />
   </ItemGroup>

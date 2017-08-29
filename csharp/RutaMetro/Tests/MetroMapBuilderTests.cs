@@ -1,4 +1,4 @@
-﻿namespace CodeCamp.RutaMetro
+﻿namespace CodeCamp.RutaMetro.Tests
 {
     using System.Linq;
 
@@ -72,7 +72,7 @@
         {
             var coord = fixture.Create<Coord>();
             var linea = MakeLinea(coord);
-            var estacion = MakeEstacion(Clone(coord));
+            var estacion = MakeEstacion((Coord)coord.Clone());
 
             var result = new MetroMapBuilder()
                 .WithLines(new[] { linea })
@@ -108,11 +108,6 @@
         #endregion
 
         #region Helper Methods
-
-        private static Coord Clone(Coord coord)
-        {
-            return new Coord(coord.Latitud, coord.Longitud);
-        }
 
         private static Estacion MakeEstacion(Coord? coord = null)
         {

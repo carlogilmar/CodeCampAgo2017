@@ -1,11 +1,10 @@
-﻿namespace CodeCamp.RutaMetro
+﻿namespace CodeCamp.RutaMetro.Tests
 {
     using System.Linq;
 
-    using CodeCamp.RutaMetro.Models;
-
     using NUnit.Framework;
-    using NUnit.Framework.Constraints;
+
+    using static CoordTests;
 
     [TestFixture]
     public class ParserTests
@@ -90,15 +89,6 @@
             Assert.That(parser.Estaciones, Has.All.Property("Coord").Not.Null);
             Assert.That(parser.Estaciones.First().Coord, PointsAt(-99.0056777, 19.3647171));
             Assert.That(parser.Estaciones.Last().Coord, PointsAt(-99.1329861, 19.4332227));
-        }
-
-        #endregion
-
-        #region Helper Methods
-
-        private static EqualConstraint PointsAt(double latitud, double longitud)
-        {
-            return Is.EqualTo(new Coord(latitud, longitud));
         }
 
         #endregion

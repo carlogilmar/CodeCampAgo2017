@@ -1,12 +1,20 @@
 ﻿namespace CodeCamp.RutaMetro.Models
 {
+    using System;
     using static System.Math;
 
-    public struct Coord
+    public struct Coord : ICloneable
     {
         #region Constants
 
-        private const double Epsilon = 0.00001;
+        private const double Epsilon = 0.0001;
+
+        #endregion
+
+        #region Fields
+
+        private readonly double latitud;
+        private readonly double longitud;
 
         #endregion
 
@@ -15,17 +23,17 @@
         public Coord(double latitud, double longitud)
             : this()
         {
-            this.Latitud = latitud;
-            this.Longitud = longitud;
+            this.latitud = latitud;
+            this.longitud = longitud;
         }
 
         #endregion
 
         #region Public Properties
 
-        public double Latitud { get; private set; }
+        public double Latitud => this.latitud;
 
-        public double Longitud { get; private set; }
+        public double Longitud => this.longitud;
 
         #endregion
 
@@ -41,9 +49,14 @@
             return coord1.Equals(coord2);
         }
 
+        public object Clone()
+        {
+            return new Coord(this.latitud, this.longitud);
+        }
+
         public double Distance(Coord other)
         {
-            return Sqrt(Pow(other.Latitud - this.Latitud, 2) + Pow(other.Longitud - this.Longitud, 2));
+            return Sqrt(Pow(other.latitud - this.latitud, 2) + Pow(other.longitud - this.longitud, 2));
         }
 
         public override bool Equals(object obj)
@@ -60,19 +73,19 @@
         public override int GetHashCode()
         {
             var result = base.GetHashCode();
-            result = result * -1521134295 + this.Latitud.GetHashCode();
-            result = result * -1521134295 + this.Longitud.GetHashCode();
+            result = result * -1521134295 + this.latitud.GetHashCode();
+            result = result * -1521134295 + this.longitud.GetHashCode();
             return result;
         }
 
         public Coord Offset(double dLatitud = 0, double dLongitud = 0)
         {
-            return new Coord(this.Latitud + dLatitud, this.Longitud + dLongitud);
+            return new Coord(this.latitud + dLatitud, this.longitud + dLongitud);
         }
 
         public override string ToString()
         {
-            return $"{GetType().Name}({Latitud}m, {Longitud}m)";
+            return $"{GetType().Name}({latitud}, {longitud})";
         }
 
         #endregion

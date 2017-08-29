@@ -1,4 +1,4 @@
-namespace CodeCamp.RutaMetro
+namespace CodeCamp.RutaMetro.Models
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;
