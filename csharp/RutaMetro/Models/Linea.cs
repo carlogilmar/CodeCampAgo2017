@@ -4,7 +4,9 @@
 
     public class Linea
     {
-        public IList<Coord> Vertices { get; set; }
         public string Nombre { get; set; }
+        public IList<Coord> Vertices { get; set; }
+
+        public IList<Estacion> Estaciones { get; set; } = new List<Estacion>();
     }
 }
