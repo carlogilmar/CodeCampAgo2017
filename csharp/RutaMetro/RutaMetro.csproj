@@ -50,14 +50,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MetroMapBuilder.cs" />
-    <Compile Include="MetroMapBuilderTests.cs" />
     <Compile Include="Models\Coord.cs" />
     <Compile Include="Models\Estacion.cs" />
     <Compile Include="KlmModel.cs" />
     <Compile Include="Models\Linea.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\MetroMapBuilderTests.cs" />
+    <Compile Include="Tests\ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
