@@ -5,10 +5,19 @@
     using System.IO;
     using System.Linq;
     using System.Xml.Serialization;
+
+    using CodeCamp.RutaMetro.Models;
+
     public class Parser
     {
+        #region Public Properties
+
         public IList<Linea> Lineas { get; private set; }
         public IList<Estacion> Estaciones { get; private set; }
+
+        #endregion
+
+        #region Public Methods
 
         public static Parser Parse(string filePath)
         {
@@ -23,16 +32,6 @@
             };
         }
 
-        private static Estacion ToEstacion(Placemark placemark)
-        {
-            return new Estacion
-            {
-                Nombre = placemark.Name,
-                Descripcion = placemark.Description,
-                Coord = ToCoords(placemark.Point.Coordinates).First()
-            };
-        }
-
         public static Kml ReadModelFrom(string filePath)
         {
             Kml result = null;
@@ -44,6 +43,20 @@
             }
 
             return result;
+        }
+
+        #endregion
+
+        #region Methods
+
+        private static Estacion ToEstacion(Placemark placemark)
+        {
+            return new Estacion
+            {
+                Nombre = placemark.Name,
+                Descripcion = placemark.Description,
+                Coord = ToCoords(placemark.Point.Coordinates).First()
+            };
         }
 
         private static Coord ToCoord(string line)
@@ -75,5 +88,7 @@
                 Vertices = ToCoords(coordinates)
             };
         }
+
+        #endregion
     }
 }
