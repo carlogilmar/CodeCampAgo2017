@@ -17,7 +17,7 @@
 
         #endregion
 
-        #region Public Methods
+        #region Test Methods
 
         [Test]
         public void ReadsModelFromFile()
@@ -94,7 +94,7 @@
 
         #endregion
 
-        #region Methods
+        #region Helper Methods
 
         private static EqualConstraint PointsAt(double latitud, double longitud)
         {

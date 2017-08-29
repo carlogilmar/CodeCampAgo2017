@@ -1,7 +1,5 @@
 ﻿namespace CodeCamp.RutaMetro
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     using CodeCamp.RutaMetro.Models;
@@ -10,63 +8,6 @@
 
     using Ploeh.AutoFixture;
     using Ploeh.AutoFixture.Dsl;
-
-    public class MetroMapBuilder
-    {
-        #region Fields
-
-        private IEnumerable<Linea> lines = Enumerable.Empty<Linea>();
-
-        public IEnumerable<Estacion> stations = Enumerable.Empty<Estacion>();
-
-        #endregion
-
-        #region Public Methods
-
-        public Mapa Build()
-        {
-            var mapa = new Mapa
-            {
-                Lineas = this.lines.ToList(),
-                Estaciones = this.stations.ToList(),
-            };
-
-            foreach(var estacion in mapa.Estaciones)
-            {
-                foreach(var linea in mapa.Lineas)
-                {
-                    if (linea.Vertices.Any(v => estacion.Coord == v))
-                    {
-                        linea.Estaciones.Add(estacion);
-                        estacion.Lineas.Add(linea);
-                    }
-                }
-            }
-
-            return mapa;
-        }
-
-        public MetroMapBuilder WithLines(IEnumerable<Linea> moreLines)
-        {
-            this.lines = this.lines.Concat(moreLines);
-            return this;
-        }
-
-        public MetroMapBuilder WithStations(IEnumerable<Estacion> moreStations)
-        {
-            this.stations = this.stations.Concat(moreStations);
-            return this;
-        }
-
-        #endregion
-
-        public class Mapa
-        {
-            public IList<Linea> Lineas { get; set; }
-
-            public IList<Estacion> Estaciones { get; set; }
-        }
-    }
 
     [TestFixture]
     public class MetroMapBuilderTests
@@ -77,7 +18,7 @@
 
         #endregion
 
-        #region Public Methods
+        #region Test Methods
 
         [SetUp]
         public void Init()
@@ -138,9 +79,9 @@
                 .WithStations(new[] { estacion })
                 .Build();
 
-            Assert.That(result.Lineas.First().Estaciones, Is.Not.Empty,
+            Assert.That(result.Lineas.First().Estaciones, Does.Contain(estacion),
                 "La línea debería tener una estación");
-            Assert.That(result.Estaciones.First().Lineas, Is.Not.Empty,
+            Assert.That(result.Estaciones.First().Lineas, Does.Contain(linea),
                 "La estación debería pertenecer a una línea");
         }
 
@@ -158,15 +99,15 @@
                 .WithStations(new[] { estacion })
                 .Build();
 
-            Assert.That(result.Lineas.First().Estaciones, Is.Not.Empty,
+            Assert.That(result.Lineas.First().Estaciones, Does.Contain(estacion),
                 "La línea debería tener una estación");
-            Assert.That(result.Estaciones.First().Lineas, Is.Not.Empty,
+            Assert.That(result.Estaciones.First().Lineas, Does.Contain(linea),
                 "La estación debería pertenecer a una línea");
         }
 
         #endregion
 
-        #region Methods
+        #region Helper Methods
 
         private static Coord Clone(Coord coord)
         {

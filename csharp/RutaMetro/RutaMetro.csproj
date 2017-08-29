@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MetroMapBuilder.cs" />
     <Compile Include="MetroMapBuilderTests.cs" />
     <Compile Include="Models\Coord.cs" />
     <Compile Include="Models\Estacion.cs" />
